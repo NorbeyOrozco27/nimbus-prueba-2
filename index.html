@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoreo Rutas - Rionegro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Sidebar para navegación -->
+    <aside class="sidebar">
+        <h1 class="sidebar-title">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Monitoreo Rionegro</span>
+        </h1>
+        <ul class="sidebar-menu">
+            <li><button id="nav-registro" class="active">
+                <i class="fas fa-plus-circle"></i>
+                <span>Registrar Viaje</span>
+            </button></li>
+            <li><button id="nav-registros">
+                <i class="fas fa-list"></i>
+                <span>Lista de Viajes</span>
+            </button></li>
+            <li><button id="nav-informe-vehiculos">
+                <i class="fas fa-truck"></i>
+                <span>Monitoreo por Vehículo</span>
+            </button></li>
+            <li><button id="nav-informe-advertencias">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Advertencias Conductores</span>
+            </button></li>
+            <li><button id="nav-informe-descargos">
+                <i class="fas fa-file-alt"></i>
+                <span>Conductores a Descargos</span>
+            </button></li>
+        </ul>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <!-- Sección Registro de Viaje -->
+        <section id="section-registro" class="section-active">
+            <h1 class="section-title">
+                <i class="fas fa-plus-circle"></i>
+                Registrar Viaje - Rionegro
+            </h1>
+            <form id="formRionegro" class="form-container">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fecha_monitoreo"><i class="fas fa-calendar"></i> Fecha del Monitoreo:</label>
+                        <input type="date" id="fecha_monitoreo" name="fecha_monitoreo" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tipo_monitoreo"><i class="fas fa-list"></i> Tipo del Monitoreo:</label>
+                        <select id="tipo_monitoreo" name="tipo_monitoreo" required>
+                            <option value="">-- Seleccionar --</option>
+                            <option value="Historico">Histórico</option>
+                            <option value="Real">Real</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="conductor_id"><i class="fas fa-user"></i> Nombre del Conductor:</label>
+                        <select id="conductor_id" name="conductor_id" required>
+                            <option value="">-- Cargando... --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehiculo_id"><i class="fas fa-truck"></i> Número Interno del Vehículo:</label>
+                        <select id="vehiculo_id" name="vehiculo_id" required>
+                            <option value="">-- Cargando... --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tabla_id"><i class="fas fa-table"></i> Número de la Tabla:</label>
+                        <select id="tabla_id" name="tabla_id">
+                            <option value="">-- Seleccionar --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ruta"><i class="fas fa-road"></i> Seleccionar Ruta:</label>
+                        <select id="ruta" name="ruta" required>
+                            <option value="">-- Seleccionar --</option>
+                            <option value="La Ceja - Rionegro">La Ceja - Rionegro</option>
+                            <option value="Rionegro - La Ceja">Rionegro - La Ceja</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="ruta-info" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="salida_programada"><i class="fas fa-clock"></i> Salida Programada:</label>
+                            <input type="time" id="salida_programada" name="salida_programada" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="salida_real"><i class="fas fa-clock"></i> Salida Real:</label>
+                            <input type="time" id="salida_real" name="salida_real" required>
+                        </div>
+                    </div>
+
+                    <div id="retraso-salida-container" style="display: none;">
+                        <div class="form-group">
+                            <label><i class="fas fa-check-circle"></i> ¿La salida tardía fue justificada?</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="retraso_salida_justificado" value="si"> Sí</label>
+                                <label><input type="radio" name="retraso_salida_justificado" value="no"> No</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="motivo_retraso_salida"><i class="fas fa-exclamation-triangle"></i> Motivo del Retraso en Salida:</label>
+                            <select id="motivo_retraso_salida" name="motivo_retraso_salida">
+                                <option value="">-- Seleccionar --</option>
+                                <option value="Accidente">Accidente en la vía</option>
+                                <option value="Obras Viales">Obras Viales</option>
+                                <option value="Tráfico">Tráfico Excesivo</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="puntos-control-container">
+                        <!-- Aquí se insertarán dinámicamente los puntos de control -->
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" id="btn-calcular" class="btn-primary">
+                            <i class="fas fa-calculator"></i> Clasificar y Guardar
+                        </button>
+                    </div>
+                    <div id="resultado-clasificacion" class="result-container"></div>
+                </div>
+            </form>
+        </section>
+
+        <!-- Sección Lista de Viajes -->
+        <section id="section-registros" class="section-hidden">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-list"></i>
+                    Lista de Viajes
+                </h2>
+                <div class="section-actions">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-registros" placeholder="Buscar en viajes...">
+                    </div>
+                    <button type="button" id="btn-cargar-registros" class="btn-primary">
+                        <i class="fas fa-sync-alt"></i> Actualizar
+                    </button>
+                </div>
+            </div>
+            <div id="tabla-registros-container" class="tabla-registros-wrapper">
+                <div class="empty-state">
+                    <i class="fas fa-table"></i>
+                    <h3>No hay datos cargados</h3>
+                    <p>Haz clic en "Actualizar" para cargar los registros de viajes</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Monitoreo por Vehículo -->
+        <section id="section-informe-vehiculos" class="section-hidden">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-truck"></i>
+                    Monitoreo por Vehículo
+                </h2>
+                <div class="section-actions">
+                    <button type="button" id="btn-cargar-informe-vehiculos" class="btn-primary">
+                        <i class="fas fa-chart-bar"></i> Generar Informe
+                    </button>
+                </div>
+            </div>
+            <div id="tabla-informe-vehiculos" class="tabla-registros-wrapper">
+                <div class="empty-state">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>Informe de vehículos</h3>
+                    <p>Haz clic en "Generar Informe" para ver el reporte</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Advertencias Conductores -->
+        <section id="section-informe-advertencias" class="section-hidden">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Advertencias Conductores
+                </h2>
+                <div class="section-actions">
+                    <button type="button" id="btn-cargar-informe-advertencias" class="btn-primary">
+                        <i class="fas fa-exclamation-circle"></i> Generar Informe
+                    </button>
+                </div>
+            </div>
+            <div id="tabla-informe-advertencias" class="tabla-registros-wrapper">
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Informe de advertencias</h3>
+                    <p>Haz clic en "Generar Informe" para ver las advertencias</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Conductores a Descargos -->
+        <section id="section-informe-descargos" class="section-hidden">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-file-alt"></i>
+                    Conductores a Descargos
+                </h2>
+                <div class="section-actions">
+                    <button type="button" id="btn-cargar-informe-descargos" class="btn-primary">
+                        <i class="fas fa-file-pdf"></i> Generar Informe
+                    </button>
+                </div>
+            </div>
+            <div id="tabla-informe-descargos" class="tabla-registros-wrapper">
+                <div class="empty-state">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>Informe de descargos</h3>
+                    <p>Haz clic en "Generar Informe" para ver los conductores a descargos</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Script -->
+    <script src="script.js"></script>
+</body>
+</html>
