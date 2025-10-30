@@ -484,6 +484,20 @@ function inicializarEventosFormulario() {
                     .select();
 
                 if (error) throw error;
+                // Dentro de btnCalcular.addEventListener
+try {
+    const { data, error } = await supabaseClient.from('viajes_rionegro').insert([datosParaGuardar]).select(); // <-- Inserción
+    if (error) throw error;
+
+    // --- AQUÍ --- (Después de la inserción exitosa)
+    mostrarAlerta("¡Viaje guardado con éxito!", "success");
+
+    // ... resto del código del try (limpiar formulario, recargar tabla, etc.) ...
+
+} catch (error) {
+    // Manejo de errores
+    mostrarAlerta(`Error al guardar el viaje: ${error.message}`, "danger");
+}
 
                 const resultadoContainer = document.getElementById('resultado-clasificacion');
                 let color = 'var(--success-color)';
@@ -518,6 +532,59 @@ function inicializarEventosFormulario() {
             }
         });
     }
+}
+// Función para mostrar alertas temporales
+function mostrarAlerta(mensaje, tipo = 'success') {
+    // Crear el elemento de alerta
+    const alerta = document.createElement('div');
+    // Asignar clases para estilos de Bootstrap o personalizados (opcional)
+    alerta.className = `alert alert-${tipo} alert-temporal`;
+    alerta.textContent = mensaje;
+
+    // Estilos básicos para el alerta (pueden ser mejorados en CSS)
+    alerta.style.position = 'fixed';
+    alerta.style.top = '20px';
+    alerta.style.right = '20px';
+    alerta.style.padding = '15px';
+    alerta.style.borderRadius = '8px';
+    alerta.style.fontSize = '16px';
+    alerta.style.fontWeight = 'bold';
+    alerta.style.zIndex = '1000';
+    alerta.style.opacity = '0'; // Inicialmente invisible
+    alerta.style.transition = 'opacity 0.3s ease-out'; // Transición para fadeIn/fadeOut
+
+    // Colores según el tipo (Bootstrap o personalizados)
+    if (tipo === 'success') {
+        alerta.style.backgroundColor = '#d4edda'; // Verde claro
+        alerta.style.color = '#155724'; // Verde oscuro
+        alerta.style.borderColor = '#c3e6cb'; // Borde verde
+    } else if (tipo === 'info') {
+        alerta.style.backgroundColor = '#cce5ff'; // Azul claro
+        alerta.style.color = '#004085'; // Azul oscuro
+        alerta.style.borderColor = '#b8daff'; // Borde azul
+    } else if (tipo === 'danger') {
+         alerta.style.backgroundColor = '#f8d7da'; // Rojo claro
+         alerta.style.color = '#721c24'; // Rojo oscuro
+         alerta.style.borderColor = '#f5c6cb'; // Borde rojo
+    }
+
+    // Añadir al body
+    document.body.appendChild(alerta);
+
+    // Hacer fadeIn
+    setTimeout(() => {
+        alerta.style.opacity = '1';
+    }, 10); // Pequeño delay para asegurar que se aplica el estilo antes de la transición
+
+    // Ocultar después de 3 segundos
+    setTimeout(() => {
+        alerta.style.opacity = '0';
+        setTimeout(() => {
+            if (document.body.contains(alerta)) { // Verificar si aún está en el DOM
+                document.body.removeChild(alerta);
+            }
+        }, 300); // Esperar a que termine la transición de fadeOut
+    }, 3000); // Duración visible
 }
 
 // ===== NAVEGACIÓN =====
@@ -894,10 +961,10 @@ async function cargarInformeDescargos() {
             const retrasoSalida = salidaRealMins - salidaProgramadaMins > 0 ? salidaRealMins - salidaProgramadaMins : 0;
 
             // Verificar salida injustificada
-            if (retrasoSalida > 1 && !viaje.retraso_salida_justificado) { // linea corregida 🔍👌
+            if (retrasoSalida > 1 && !viaje.retraso_salida_justificado) { // linea corregida 🔍👌😊😊
                 hayInfraccionInjustificada = true;
             }
-
+/// hola lorena 
             // Verificar puntos injustificados
             if (viaje.puntos_control_detalle?.some(p => 
                 p.estado === 'tarde' && p.justificado === 'no'

@@ -796,3 +796,18 @@ input:focus, select:focus, textarea:focus {
     background-color: var(--accent-hover);
     transform: translateY(-1px);
 }
+/* Estilos para los checkboxes de estado de punto de control */
+.puntos-control-cell input[type="radio"].estado-checkbox {
+    /* Fondo blanco cuando está checked */
+    background-color: white !important;
+    /* Borde negro para contraste */
+    border: 2px solid black !important;
+    /* Asegura que el círculo interno (checkmark o punto) sea visible */
+    accent-color: black; /* Cambia el color del punto interno a negro */
+}
+
+/* Opcional: Cambiar el color del texto "A tiempo" y "Tarde" cuando el checkbox está checked */
+.puntos-control-cell input[type="radio"].estado-checkbox:checked + label {
+    color: white !important; /* Cambia el color del texto si lo deseas */
+    font-weight: bold; /* Opcional: resaltar el texto seleccionado */
+}
