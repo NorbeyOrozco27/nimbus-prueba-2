@@ -333,7 +333,7 @@ function evaluarRetrasoSalida() {
 
     if (salidaProgramadaVal && salidaRealVal) {
         const minutosRetraso = diffInMinutes(salidaProgramadaVal, salidaRealVal);
-        if (minutosRetraso > 1) {
+        if (minutosRetraso > 1) { /// evaluar si es mayor a 1 minuto ❌🤷‍♂️
             retrasoContainer.style.display = 'block';
         } else {
             retrasoContainer.style.display = 'none';
@@ -771,7 +771,7 @@ async function cargarInformeAdvertencias() {
     const retrasoSalida = salidaRealMins - salidaProgramadaMins > 0 ? salidaRealMins - salidaProgramadaMins : 0;
 
     // ✅ NUEVA LÓGICA - Verificar salida injustificada
-    if (retrasoSalida > 0 && !viaje.retraso_salida_justificado) {
+    if (retrasoSalida > 1 && !viaje.retraso_salida_justificado) { // linea cambiada 🔍👌
         hayInfraccionInjustificada = true;
     }
 
@@ -894,7 +894,7 @@ async function cargarInformeDescargos() {
             const retrasoSalida = salidaRealMins - salidaProgramadaMins > 0 ? salidaRealMins - salidaProgramadaMins : 0;
 
             // Verificar salida injustificada
-            if (retrasoSalida > 0 && !viaje.retraso_salida_justificado) {
+            if (retrasoSalida > 1 && !viaje.retraso_salida_justificado) { // linea corregida 🔍👌
                 hayInfraccionInjustificada = true;
             }
 
