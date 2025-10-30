@@ -17,7 +17,7 @@
   /* Sombras mejoradas */
   --container-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
   --button-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
-  --input-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
+  --input-shadow: inset 6px 6px 12px rgba(0, 112, 243, 0.05), inset -6px -6px 12px rgba(0, 112, 243, 0.3);
   --element-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
   --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
